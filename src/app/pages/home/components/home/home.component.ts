@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SimplePokemon } from 'src/app/interfaces/simple-pokemon';
+import { PokemonData } from 'src/app/interfaces/pokemon-data';
 
 //Services
 import { PokemonsService } from 'src/app/services/pokemons.service';
@@ -12,7 +12,7 @@ import { PokemonsService } from 'src/app/services/pokemons.service';
 export class HomeComponent implements OnInit {
   constructor(private pokemonsService: PokemonsService) {}
 
-  public pagePokemons: SimplePokemon[] = [];
+  public pagePokemons: PokemonData[] = [];
 
   public page: number = 1;
 
@@ -25,5 +25,29 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => console.log(error),
     });
+  }
+
+  public getNewPokemons(): void {
+    this.pokemonsService.getPokemons().subscribe({
+      next: (res) => {
+        this.pokemonsService.pokemons = res.results;
+      },
+      error: (error) => console.log(error),
+    });
+  }
+
+  public addPage(): void {
+    this.page += 1;
+    this.pokemonsService.setPagePokemons(this.page);
+    this.pagePokemons = [...this.pokemonsService.pagePokemons];
+    if (this.page === this.pokemonsService.pokemons.length / 10 - 1) {
+      this.getNewPokemons();
+    }
+  }
+
+  public subtractPage(): void {
+    this.page -= 1;
+    this.pokemonsService.setPagePokemons(this.page);
+    this.pagePokemons = [...this.pokemonsService.pagePokemons];
   }
 }

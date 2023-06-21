@@ -1,3 +1,8 @@
 <section>
   <div *ngFor="let pokemon of pagePokemons">{{ pokemon.name }}</div>
 </section>
+<section class="buttons">
+  <button [disabled]="page === 1" (click)="subtractPage()">Prev</button>
+  <h1>{{ page }}</h1>
+  <button (click)="addPage()">Next</button>
+</section>

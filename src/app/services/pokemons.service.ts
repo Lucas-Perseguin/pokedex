@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 //Interface
-import { SimplePokemon } from 'src/app/interfaces/simple-pokemon';
-import { Observable } from 'rxjs';
+import { PokemonData } from '../interfaces/pokemon-data';
 
 @Injectable({
   providedIn: 'root',
@@ -11,22 +11,31 @@ import { Observable } from 'rxjs';
 export class PokemonsService {
   constructor(private http: HttpClient) {}
 
-  private baseUrl: string = 'https://pokeapi.co/api/v2/';
+  private baseUrl: string = 'https://pokeapi.co/api/v2/pokemon';
 
-  private _pokemons: SimplePokemon[] = [];
+  private _pokemons: PokemonData[] = [];
 
-  private _pagePokemons: SimplePokemon[] = [];
+  private _pagePokemons: PokemonData[] = [];
 
-  public getPokemons(): Observable<{ results: SimplePokemon[] }> {
+  public getPokemons(): Observable<{ results: PokemonData[] }> {
     return this.http
-      .get<{ results: SimplePokemon[] }>(`${this.baseUrl}pokemon?limit=50`)
+      .get<{ results: PokemonData[] }>(
+        `${this.baseUrl}?limit=40&offset=${this._pokemons.length}`
+      )
       .pipe(
         (response) => response,
         (error) => error
       );
   }
 
-  public set pokemons(list: SimplePokemon[]) {
+  public getPokemonData(name: string, index: number): Observable<PokemonData> {
+    return this.http.get<PokemonData>(`${this.baseUrl}/${name}`).pipe(
+      (response) => response,
+      (error) => error
+    );
+  }
+
+  public set pokemons(list: PokemonData[]) {
     this._pokemons = [...this._pokemons, ...list];
   }
 
