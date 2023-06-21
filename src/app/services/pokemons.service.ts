@@ -28,15 +28,15 @@ export class PokemonsService {
       );
   }
 
-  public getPokemonData(name: string, index: number): Observable<PokemonData> {
+  public getPokemonData(name: string): Observable<PokemonData> {
     return this.http.get<PokemonData>(`${this.baseUrl}/${name}`).pipe(
       (response) => response,
       (error) => error
     );
   }
 
-  public set pokemons(list: PokemonData[]) {
-    this._pokemons = [...this._pokemons, ...list];
+  public setPokemon(value: PokemonData): void {
+    this._pokemons.push(value);
   }
 
   public get pokemons() {

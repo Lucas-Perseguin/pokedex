@@ -1,5 +1,10 @@
 <section>
-  <div *ngFor="let pokemon of pagePokemons">{{ pokemon.name }}</div>
+  <div *ngFor="let pokemon of pagePokemons">
+    <h1>{{ pokemon.name }}</h1>
+    <div>
+      <p *ngFor="let type of pokemon.types">{{ type.type.name }}</p>
+    </div>
+  </div>
 </section>
 <section class="buttons">
   <button [disabled]="page === 1" (click)="subtractPage()">Prev</button>
