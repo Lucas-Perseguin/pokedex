@@ -27,25 +27,27 @@ export class HomeComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.page = parseInt(params['page']);
     });
-    await this.pokemonsService.getPokemons().subscribe({
-      next: async (res) => {
-        await Promise.all(
-          res.results.map((pokemon, index) => {
-            this.pokemonsService.getPokemonData(pokemon.name).subscribe({
-              next: (response) => {
-                this.pokemonsService.setPokemon(response);
-                if (index === res.results.length - 1) {
-                  this.pokemonsService.setPagePokemons(this.page);
-                  this.pagePokemons = [...this.pokemonsService.pagePokemons];
-                }
-              },
-              error: (error) => console.log(error),
-            });
-          })
-        ).then((response) => {});
-      },
-      error: (error) => console.log(error),
-    });
+    await this.pokemonsService
+      .getPokemons(this.page !== 1 ? this.page : undefined)
+      .subscribe({
+        next: async (res) => {
+          await Promise.all(
+            res.results.map((pokemon, index) => {
+              this.pokemonsService.getPokemonData(pokemon.name).subscribe({
+                next: (response) => {
+                  this.pokemonsService.setPokemon(response);
+                  if (index === res.results.length - 1) {
+                    this.pokemonsService.setPagePokemons(this.page);
+                    this.pagePokemons = [...this.pokemonsService.pagePokemons];
+                  }
+                },
+                error: (error) => console.log(error),
+              });
+            })
+          ).then((response) => {});
+        },
+        error: (error) => console.log(error),
+      });
   }
 
   public getNewPokemons(): void {
@@ -66,7 +68,7 @@ export class HomeComponent implements OnInit {
 
   public addPage(): void {
     this.router.navigate([''], { queryParams: { page: this.page + 1 } });
-    this.pokemonsService.setPagePokemons(this.page);
+    this.pokemonsService.setPagePokemons(this.page + 1);
     this.pagePokemons = [...this.pokemonsService.pagePokemons];
     if (this.page >= this.pokemonsService.pokemons.length / 10 - 2) {
       this.getNewPokemons();
@@ -75,7 +77,7 @@ export class HomeComponent implements OnInit {
 
   public subtractPage(): void {
     this.router.navigate([''], { queryParams: { page: this.page - 1 } });
-    this.pokemonsService.setPagePokemons(this.page);
+    this.pokemonsService.setPagePokemons(this.page - 1);
     this.pagePokemons = [...this.pokemonsService.pagePokemons];
   }
 }

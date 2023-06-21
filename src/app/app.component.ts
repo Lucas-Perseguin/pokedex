@@ -12,6 +12,8 @@ export class AppComponent implements OnInit {
   title = 'pokedex';
 
   ngOnInit(): void {
-    this.router.navigate([''], { queryParams: { page: 1 } });
+    if (window.location.search === '' && window.location.pathname === '/') {
+      this.router.navigate([''], { queryParams: { page: 1 } });
+    }
   }
 }

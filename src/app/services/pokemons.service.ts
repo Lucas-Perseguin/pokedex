@@ -17,10 +17,11 @@ export class PokemonsService {
 
   private _pagePokemons: PokemonData[] = [];
 
-  public getPokemons(): Observable<{ results: PokemonData[] }> {
+  public getPokemons(page?: number): Observable<{ results: PokemonData[] }> {
+    const limit = page ? (page + 4) * 10 : 40;
     return this.http
       .get<{ results: PokemonData[] }>(
-        `${this.baseUrl}?limit=40&offset=${this._pokemons.length}`
+        `${this.baseUrl}?limit=${limit}&offset=${this._pokemons.length}`
       )
       .pipe(
         (response) => response,
@@ -36,7 +37,7 @@ export class PokemonsService {
   }
 
   public setPokemon(value: PokemonData): void {
-    this._pokemons.push(value);
+    this._pokemons[value.id - 1] = value;
   }
 
   public get pokemons() {

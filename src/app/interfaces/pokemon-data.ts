@@ -6,4 +6,5 @@ export interface PokemonData {
   types: { type: { name: string } }[];
   moves: { move: { name: string } }[];
   abilities: { ability: { name: string } }[];
+  id: number;
 }
